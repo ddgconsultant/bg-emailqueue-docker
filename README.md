@@ -25,6 +25,75 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * Schedule emails: Inject now an email and specify a future date/time for a scheduled delivery.
 * The code is quite naive, built in the early 2000s. But boy, it's been tested! This means it will be very easy for you if you decide to branch/fork it and improve it. Emailqueue is a funny grown old man.
 
+# How to use via API calls #
+The API endpoint URL would be like: https://<domain or IP>/emailqueue/api.php
+
+Call the endpoint by making an HTTP request with the following POST parameters:
+
+* key: The API_KEY as defined in your application.config.inc.php
+* message: A Json containing an array defining the email message you want to inject, with the keys as defined in the "Emailqueue injection keys" section of this document.
+  * Unfortunately, you cannot yet attach images when calling Emailqueue via API, so the "attachments" and "is_embed_images" keys won't have any affect when calling the API.
+
+An example value for the message POST parameter would be:
+
+`
+	{
+		"from":"me@domain.com",
+		"to":"him@domain.com",
+		"subject":"Just testing",
+		"content":"This is just an email to test Emailqueue"
+	}
+`
+
+To inject multiple messages in a single API call, use the POST parameter "messages" instead of "message":
+  * messages: A Json containing an array of arrays defining the email messages, where each array defining the email message has the keys as defined in the "Emailqueue injection keys" section of this document.
+
+An example value for the messages POST parameter would be:
+
+`
+	[
+		{
+			"from":"me@domain.com",
+			"to":"him@domain.com",
+			"subject":"Just testing",
+			"content":"This is just an email to test Emailqueue"
+		},
+		{
+			"from":"me@domain.com",
+			"to":"him@domain.com",
+			"subject":"Testing again",
+			"content":"This is another test"
+		}
+	]
+`
+
+The API will respond with a Json object containing the following keys:
+
+ * result: True if the email or emails were injected ok, false otherwise.
+ * errorDescription: A decription of the error, if any.
+
+# Emailqueue injection keys #
+Whenever you inject an email using the emailqueue_inject class, calling the API or manually inserting into Emailqueue's database, these are the keys you can use and their description:
+
+  * **foreign_id_a**: Optional, an id number for your internal records. e.g. Your internal id of the user who has sent this email.
+  * **foreign_id_b**: Optional, a secondary id number for your internal records.
+  * **priority**: The priority of this email in relation to others: The lower the priority, the sooner it will be sent. e.g. An email with priority 10 will be sent first even if one thousand emails with priority 11 have been injected before.
+  * **is_immediate**: Set it to true to queue this email to be delivered as soon as possible. (doesn't overrides priority setting)
+  * **is_send_now**: Set it to true to make this email be sent right now, without waiting for the next delivery call. This effectively gets rid of the queueing capabilities of emailqueue and can delay the execution of your script a little while the SMTP connection is done. Use it in those cases where you don't want your users to wait not even a minute to receive your message.
+  * **date_queued**: If specified, this message will be sent only when the given timestamp has been reached. Leave it to false to send the message as soon as possible. (doesn't overrides priority setting)
+  * **is_html**: Whether the given "content" parameter contains HTML or not.
+  * **from**: The sender email address
+  * **from_name**: The sender name
+  * **to**: The addressee email address
+  * **replyto**: The email address where replies to this message will be sent by default
+  * **replyto_name**: The name where replies to this message will be sent by default
+  * **subject**: The email subject
+  * **content**: The email content. Can contain HTML (set is_html parameter to true if so).
+  * **content_nonhtml**: The plain text-only content for clients not supporting HTML emails (quite rare nowadays). If set to false, a text-only version of the given content will be automatically generated.
+  * **list_unsubscribe_url**: Optional. Specify the URL where users can unsubscribe from your mailing list. Some email clients will show this URL as an option to the user, and it's likely to be considered by many SPAM filters as a good signal, so it's really recommended.
+  * **attachments**: Optional. An array of hash arrays specifying the files you want to attach to your email. See example.php for an specific description on how to build this array.
+  * **is_embed_images**: When set to true, Emailqueue will find all the <img ... /> tags in your provided HTML code on the "content" parameter and convert them into embedded images that are attached to the email itself instead of being referenced by URL. This might cause email clients to show the email straightaway without the user having to accept manually to load the images. Setting this option to true will greatly increase the bandwidth usage of your SMTP server, since each message will contain hard copies of all embedded messages. 10k emails with 300Kbs worth of images each means around 3Gb. of data to be transferred!
+
 # Please #
 Do not use Emailqueue to send unsolicited email, or emails about animal abuse.
 
