@@ -1,0 +1,51 @@
+version: "3.6"
+
+services:
+    apache:
+        image: emailqueue-apache
+        container_name: emailqueue-apache
+        build:
+            context: .
+            dockerfile: ./apache/Dockerfile
+        ports:
+            - 8081:80
+        networks:
+            - emailqueue-front
+            - emailqueue-back
+        volumes:
+            - ../application.config.inc.php:/emailqueue/config/application.config.inc.php
+    
+    cron:
+        image: emailqueue-cron
+        container_name: emailqueue-cron
+        build:
+            context: .
+            dockerfile: ./cron/Dockerfile
+        networks:
+            - emailqueue-back
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+
+    mariadb:
+        image: mariadb
+        container_name: emailqueue-mariadb
+        environment:
+            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+        networks:
+            - emailqueue-back
+        volumes:
+            - emailqueue-db-data:/var/lib/mysql
+            - ./mariadb/emailqueue_init.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+        environment:
+            - MYSQL_DATABASE=emailqueue
+            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+volumes:
+    emailqueue-db-data: {}
+
+networks:
+    emailqueue-front:
+        name: emailqueue-front
+    emailqueue-back:
+        name: emailqueue-back
