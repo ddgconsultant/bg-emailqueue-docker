@@ -57,3 +57,6 @@ db-log: ## Tail the PHP error log
 
 db-ssh: ## SSH into the MariaDB container
 	docker exec -it -u root ${DOCKER_DB} bash
+
+pull: ## Updates Emailqueue to the latest version
+	docker exec -it -u root ${DOCKER_APACHE} git -C /emailqueue pull

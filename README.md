@@ -25,8 +25,29 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * Schedule emails: Inject now an email and specify a future date/time for a scheduled delivery.
 * The code is quite naive, built in the early 2000s. But boy, it's been tested! This means it will be very easy for you if you decide to branch/fork it and improve it. Emailqueue is a funny grown old man.
 
+# How to get it running #
+Thanks to docker, getting an Emailqueue server up and running is extremely simple. You'll need to have **docker**, **docker-compose** and **make** installed.
+
+* First, clone this repository:
+
+	`$ git clone https://github.com/tin-cat/emailqueue.git`
+
+* Now bring the server up by running:
+
+	`$ make up`
+
+* The first time you bring it up, the docker images will be built and it will take a few minutes. When it's finished, you'll have your Emailqueue server running.
+* You can run some basic commands via make. Run make without any parameter to see the available options:
+
+	`$ make`
+
+* You can access Emailqueue's monitoring front end by accessing this URL in your browser:
+
+	`https://<domain or IP>/frontend`
+
+
 # How to use via API calls #
-The API endpoint URL would be like: https://<domain or IP>/emailqueue/api.php
+The API endpoint URL would be like: https://<domain or IP>/emailqueue
 
 Call the endpoint by making an HTTP request with the following POST parameters:
 
