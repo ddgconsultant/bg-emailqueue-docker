@@ -2,7 +2,7 @@
 
 	namespace Emailqueue;
 
-	define("API_KEY", "");  // The secret key to access Emailqueue via API
+	define("API_KEY", "asfKkj3=m2345k");  // The secret key to access Emailqueue via API
 
 	define("FRONTEND_USER", "user"); // The user name for the frontend
 	define("FRONTEND_PASSWORD", "password"); // The password for the frontend

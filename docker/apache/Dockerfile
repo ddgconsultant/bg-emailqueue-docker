@@ -22,12 +22,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 RUN composer --working-dir=/emailqueue update
 
 # Setup apache serving paths
-
-#ENV APACHE_DOCUMENT_ROOT /emailqueue/frontend
-#RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-#RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-
-ADD ./apache/emailqueue.conf /etc/apache2/sites-available/000-default.conf
+ENV APACHE_DOCUMENT_ROOT /emailqueue
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 # Configure PHP to use a specific timezone
 RUN printf '[PHP]\ndate.timezone = "UTC"\n' > /usr/local/etc/php/conf.d/tzone.ini

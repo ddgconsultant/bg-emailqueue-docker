@@ -30,68 +30,76 @@ Thanks to docker, getting an Emailqueue server up and running is extremely simpl
 
 * First, clone this repository:
 
-	`$ git clone https://github.com/tin-cat/emailqueue.git`
+	`$ git clone https://github.com/tin-cat/emailqueue-docker.git`
 
 * Now bring the server up by running:
 
 	`$ make up`
 
 * The first time you bring it up, the docker images will be built and it will take a few minutes. When it's finished, you'll have your Emailqueue server running.
-* You can run some basic commands via make. Run make without any parameter to see the available options:
+* You can run some basic commands via make. Run this to see the available options:
 
-	`$ make`
+	`$ make help`
 
 * You can access Emailqueue's monitoring front end by accessing this URL in your browser:
 
-	`https://<domain or IP>/frontend`
+	`http://<server address>:8081/frontend`
 
 
 # How to use via API calls #
-The API endpoint URL would be like: https://<domain or IP>/emailqueue
+The API endpoint URL would be like: http://<server address>:8081/api
 
-Call the endpoint by making an HTTP request with the following POST parameters:
+Call your endpoint by making an HTTP request with the a parameter called ***q*** containing a JSon with the following keys:
 
 * key: The API_KEY as defined in your application.config.inc.php
-* message: A Json containing an array defining the email message you want to inject, with the keys as defined in the "Emailqueue injection keys" section of this document.
+* message: An array defining the email message you want to inject, with the keys as defined in the "Emailqueue injection keys" section of this document.
   * Unfortunately, you cannot yet attach images when calling Emailqueue via API, so the "attachments" and "is_embed_images" keys won't have any affect when calling the API.
 
-An example value for the message POST parameter would be:
+An example value for the ***q*** POST parameter to inject a single email would be:
 
 `
 	{
-		"from":"me@domain.com",
-		"to":"him@domain.com",
-		"subject":"Just testing",
-		"content":"This is just an email to test Emailqueue"
-	}
-`
-
-To inject multiple messages in a single API call, use the POST parameter "messages" instead of "message":
-  * messages: A Json containing an array of arrays defining the email messages, where each array defining the email message has the keys as defined in the "Emailqueue injection keys" section of this document.
-
-An example value for the messages POST parameter would be:
-
-`
-	[
-		{
+		"key":"your_api_key",
+		"message": {
 			"from":"me@domain.com",
 			"to":"him@domain.com",
 			"subject":"Just testing",
 			"content":"This is just an email to test Emailqueue"
-		},
-		{
-			"from":"me@domain.com",
-			"to":"him@domain.com",
-			"subject":"Testing again",
-			"content":"This is another test"
 		}
-	]
+	}
+`
+
+To inject multiple messages in a single API call, use the key "messages" instead of "message":
+  * messages: An array of arrays defining the email messages, where each array defining the email message has the keys as defined in the "Emailqueue injection keys" section of this document.
+
+An example value for the ***q*** POST parameter to inject multiple emails would be:
+
+`
+	{
+		"key":"your_api_key",
+		"messages": {
+			{
+				"from":"me@domain.com",
+				"to":"him@domain.com",
+				"subject":"Just testing",
+				"content":"This is just an email to test Emailqueue"
+			},
+			{
+				"from":"me@domain.com",
+				"to":"him@domain.com",
+				"subject":"Testing again",
+				"content":"This is another test"
+			}
+		}
+	}
 `
 
 The API will respond with a Json object containing the following keys:
 
  * result: True if the email or emails were injected ok, false otherwise.
  * errorDescription: A decription of the error, if any.
+
+ Take a look at the provided example_api.php in Emailqueue's repository to see an example on how to call the API in PHP.
 
 # Emailqueue injection keys #
 Whenever you inject an email using the emailqueue_inject class, calling the API or manually inserting into Emailqueue's database, these are the keys you can use and their description:
