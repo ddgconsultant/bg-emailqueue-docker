@@ -25,6 +25,9 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * Schedule emails: Inject now an email and specify a future date/time for a scheduled delivery.
 * The code is quite naive, built in the early 2000s. But boy, it's been tested! This means it will be very easy for you if you decide to branch/fork it and improve it. Emailqueue is a funny grown old man.
 
+# Requirements #
+Since docker is multi-platform and this project is built to manage its dependencies by its own, it should run in any environment with Docker. However, the cron service responsible for triggering the actual email sending process of Emailqueue relies on the file /var/run/docker.sock being available on the host system (to be able to call docker exec inside the docker cron service, see docker-compose.yml). This will most likely make this project run only on hosts where the docker socket file is available on the /var/run/docker.sock system file. Though it hasn't been tested, this will most likely prevent the Emailqueue docker from working on Windows hosts. It works fine on Linux and Mac hosts.
+
 # How to get it running #
 Thanks to docker, getting an Emailqueue server up and running is extremely simple. You'll need to have **docker**, **docker-compose** and **make** installed.
 
@@ -41,9 +44,17 @@ Thanks to docker, getting an Emailqueue server up and running is extremely simpl
 
 	`$ make help`
 
+* Modify the file application.config.inc.php to your needs
+
 * You can access Emailqueue's monitoring front end by accessing this URL in your browser:
 
-	`http://<server address>:8081/frontend`
+	`http://<server address>:8081/frontend/`
+
+* The Emailqueue API is now available on the following endpoint:
+
+	`http://<server address>:8081/api/`
+
+* See Emailqueue README, files example_local.php and example_api.php for information and examples on how to inject emails to Emailqueue.
 
 
 # How to use via API calls #
