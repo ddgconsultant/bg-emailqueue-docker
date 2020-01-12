@@ -35,6 +35,12 @@ Thanks to docker, getting an Emailqueue server up and running is extremely simpl
 
 	`$ git clone https://github.com/tin-cat/emailqueue-docker.git`
 
+* Create the `application.config.inc.php` file by copying the provided `application.config.inc.php.example` and editing it to your needs:
+
+	`$ cp application.config.inc.php.example application.config.inc.php`
+
+	`$ nano application.config.inc.php`
+
 * Now bring the server up by running:
 
 	`$ make up`
@@ -48,17 +54,17 @@ Thanks to docker, getting an Emailqueue server up and running is extremely simpl
 
 * You can access Emailqueue's monitoring front end by accessing this URL in your browser:
 
-	`http://<server address>:8081/frontend/`
+	`http://[server address]:8081/frontend/`
 
 * The Emailqueue API is now available on the following endpoint:
 
-	`http://<server address>:8081/api/`
+	`http://[server address]:8081/api/`
 
 * See Emailqueue README, files example_local.php and example_api.php for information and examples on how to inject emails to Emailqueue.
 
 
 # How to use via API calls #
-The API endpoint URL would be like: http://<server address>:8081/api
+The API endpoint URL would be like: http://[server address]:8081/api
 
 Call your endpoint by making an HTTP request with the a parameter called ***q*** containing a JSon with the following keys:
 

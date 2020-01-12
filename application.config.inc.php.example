@@ -15,13 +15,13 @@
 	define("MAX_DELIVERS_A_TIME", 1000); // Number of maximum messages to deliver every time delivery script is called. Anyway, this is better controlled with the MAXIMUM_DELIVERY_TIMEOUT configuration above.
 	define("SENDING_RETRY_MAX_ATTEMPTS", 3); // Maximum number of attemps to send a message if error is found.
 	define("PURGE_OLDER_THAN_DAYS", 5); // Purge messages older than this days from the database. Depending on the amount of emails you send, use this setting to keep your sent emails database to grow too big. It should be a balance between how big would you like to keep your sent emails history and how responsive would you like emailqueue to be. Smaller database will make emailqueue run faster when specially inserting new emails.
-
-	// Amazon SES settings
-	define("SMTP_SERVER", "email-smtp.eu-west-1.amazonaws.com"); // The IP of the SMTP server
+	
+	define("SEND_METHOD", "smtp"); // Set it to either "smtp" or "sendmail" to choose the method for delivering emails. If "smtp" is choosen, at least the SMTP_SERVER below must be set.
+	define("SMTP_SERVER", ""); // The IP or hostname of the SMTP server
 	define("SMTP_PORT", 25); // The port of the SMTP server
-	define("SMTP_IS_AUTHENTICATION", true); // True to use SMTP server Authentication
-	define("SMTP_AUTHENTICATION_USERNAME", "AKIAJ2WOHYTGLUEH6RRQ");
-	define("SMTP_AUTHENTICATION_PASSWORD", "AqthhMsiWUpah9xE7dnRrUIknwT0ESVUrXZ5lxOYsv5H");
+	define("SMTP_IS_AUTHENTICATION", false); // True to use SMTP server Authentication
+	define("SMTP_AUTHENTICATION_USERNAME", "");
+	define("SMTP_AUTHENTICATION_PASSWORD", "");
 	
 	define("CHARSET", "utf-8"); //Used in Content-Type Email Header
 	define("CONTENT_TRANSFER_ENCODING", "8bit"); //Content-Transfer-Encoding Email Header. May be 7bit, 8bit, quoted-printable or base64

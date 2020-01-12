@@ -60,3 +60,9 @@ db-ssh: ## SSH into the MariaDB container
 
 pull: ## Updates Emailqueue to the latest version
 	docker exec -it -u root ${DOCKER_APACHE} git -C /emailqueue pull
+
+delivery: ## Process the queue now instead of waiting for the next 1-minute interval
+	docker exec -it -u root ${DOCKER_APACHE} php -q /emailqueue/scripts/delivery
+
+purge: ## Purges the queue now instead of waiting for the next programmed purge
+	docker exec -it -u root ${DOCKER_APACHE} php -q /emailqueue/scripts/purge
