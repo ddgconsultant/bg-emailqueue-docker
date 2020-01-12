@@ -17,6 +17,7 @@
 	define("PURGE_OLDER_THAN_DAYS", 5); // Purge messages older than this days from the database. Depending on the amount of emails you send, use this setting to keep your sent emails database to grow too big. It should be a balance between how big would you like to keep your sent emails history and how responsive would you like emailqueue to be. Smaller database will make emailqueue run faster when specially inserting new emails.
 
 	// Amazon SES settings
+	define("SEND_METHOD", "smtp"); // Set it to either "smtp" or "sendmail" to choose the method for delivering emails. If "smtp" is choosen, at least the SMTP_SERVER below must be set.
 	define("SMTP_SERVER", "email-smtp.eu-west-1.amazonaws.com"); // The IP of the SMTP server
 	define("SMTP_PORT", 25); // The port of the SMTP server
 	define("SMTP_IS_AUTHENTICATION", true); // True to use SMTP server Authentication
@@ -37,7 +38,8 @@
     define("IS_DEVEL_ENVIRONMENT", true); // When set to true, only emails addressed to emails into $devel_emails array are sent
 
     $devel_emails = [
-        "me@email.com"
+        "me@email.com",
+		"lorenzo@tin.cat"
     ];
 
 ?>

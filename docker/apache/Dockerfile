@@ -37,3 +37,20 @@ RUN echo "<?php\n" \
 	"define(\"EMAILQUEUE_DB_PWD\", false);\n" \
 	"define(\"EMAILQUEUE_DB_DATABASE\", \"emailqueue\");\n" \
 	"?>" > /emailqueue/config/db.config.inc.php
+
+# Install cron
+RUN apt-get update && apt-get -y install cron
+
+# Add crontab file in the cron directory
+ADD apache/cronjobs /etc/cron.d/cronjobs
+
+# Give execution rights on the cron job
+RUN chmod u=rwx,g=rx,o=rx /etc/cron.d/cronjobs
+
+# Add crontab
+RUN crontab -u root /etc/cron.d/cronjobs
+
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log
+
+CMD ( cron -f & ) && apache2-foreground 

@@ -14,17 +14,6 @@ services:
             - emailqueue-back
         volumes:
             - ../application.config.inc.php:/emailqueue/config/application.config.inc.php
-    
-    cron:
-        image: emailqueue-cron
-        container_name: emailqueue-cron
-        build:
-            context: .
-            dockerfile: ./cron/Dockerfile
-        networks:
-            - emailqueue-back
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
 
     mariadb:
         image: mariadb

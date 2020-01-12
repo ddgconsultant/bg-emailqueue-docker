@@ -26,7 +26,7 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * The code is quite naive, built in the early 2000s. But boy, it's been tested! This means it will be very easy for you if you decide to branch/fork it and improve it. Emailqueue is a funny grown old man.
 
 # Requirements #
-Since docker is multi-platform and this project is built to manage its dependencies by its own, it should run in any environment with Docker. However, the cron service responsible for triggering the actual email sending process of Emailqueue relies on the file /var/run/docker.sock being available on the host system (to be able to call docker exec inside the docker cron service, see docker-compose.yml). This will most likely make this project run only on hosts where the docker socket file is available on the /var/run/docker.sock system file. Though it hasn't been tested, this will most likely prevent the Emailqueue docker from working on Windows hosts. It works fine on Linux and Mac hosts.
+Of course, you'll need Docker (http://docker.io). You'll also want Make (https://www.gnu.org/software/make/) to be able to easily send commands to Emailqueue, although it's not strictly necessary.
 
 # How to get it running #
 Thanks to docker, getting an Emailqueue server up and running is extremely simple. You'll need to have **docker**, **docker-compose** and **make** installed.
@@ -35,22 +35,28 @@ Thanks to docker, getting an Emailqueue server up and running is extremely simpl
 
 	`$ git clone https://github.com/tin-cat/emailqueue-docker.git`
 
-* Create the `application.config.inc.php` file by copying the provided `application.config.inc.php.example` and editing it to your needs:
+* Create the `application.config.inc.php` file by copying the provided `application.config.inc.php.example`:
 
 	`$ cp application.config.inc.php.example application.config.inc.php`
 
+* Edit `application.config.inc.php` and set it to your needs:
+
 	`$ nano application.config.inc.php`
+
+	* Remember to set at least the following configuration variables:
+
+		* ***API_KEY***: Do not use the default provided one! Set it to a strong random string of your choice (It's recommended you use only upper/lowercase characters, numbers and the !/(),.-¿?* special characters).
+		* ***FRONTEND_USER*** and ***FRONTEND_PASSWORD***: Do not use the default provided ones!
+		* ***SEND_METHOD***, ***SMTP_SERVER***, ***SMTP_PORT***, ***SMTP_IS_AUTHENTICATION***, ***SMTP_AUTHENTICATION_USERNAME*** and ***SMTP_AUTHENTICATION_PASSWORD***: Set them to match your sending setup.
+		* ***IS_DEVEL_ENVIRONMENT***: While testing EmailQueue, set it to true. When ready to send emails, set it to false.
+		* ***$devel_emails*** When ***IS_DEVEL_ENVIRONMENT*** is set to true, only emails addressed to the recipients listed here will be sent. Add your testing email mailboxes here to test Emailqueue.
+
 
 * Now bring the server up by running:
 
 	`$ make up`
 
 * The first time you bring it up, the docker images will be built and it will take a few minutes. When it's finished, you'll have your Emailqueue server running.
-* You can run some basic commands via make. Run this to see the available options:
-
-	`$ make help`
-
-* Modify the file application.config.inc.php to your needs
 
 * You can access Emailqueue's monitoring front end by accessing this URL in your browser:
 
@@ -60,8 +66,25 @@ Thanks to docker, getting an Emailqueue server up and running is extremely simpl
 
 	`http://[server address]:8081/api/`
 
+* Test sending emails by accessing this URL in your browser:
+
+	`http://[server address]:8081/test.php`
+
 * See Emailqueue README, files example_local.php and example_api.php for information and examples on how to inject emails to Emailqueue.
 
+# Emailqueue commands #
+You can run some basic commands by running `make [command]` in your Emailqueue docker installation dir. The following are the most relevant available commands:
+
+```
+$ make up # Starts Emailqueue.
+$ make stop # Stops Emailqueue.
+$ make cron-log # Shows the recent log of the 1 minute interval calls to Emailqueue to deliver emails.
+$ make delivery # Forces the queue to be sent now instead of waiting for the next 1 minute interval call.
+$ make purge # Purges the queue now instead of waiting for the automatic daily purging, removing emails according to the PURGE_OLDER_THAN_DAYS configuration parameter.
+$ make flush # Removes all the emails in the queue. Use with care, will result in the loss of unsent enqueued emails.
+$ make pause # Pauses email delivery. No emails will be sent under any circumstances.
+$ make unpause # Unpauses email delivery. Emails will be sent.
+```
 
 # How to use via API calls #
 The API endpoint URL would be like: http://[server address]:8081/api

@@ -1,3 +1,0 @@
-* * * * * docker exec -u root emailqueue-apache /emailqueue/scripts/delivery >> /var/log/cron.log 2>&1
-0 6 * * * docker exec -u root emailqueue-apache /emailqueue/scripts/purge >> /var/log/cron.log 2>&1
-# Empty line on purpose

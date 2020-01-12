@@ -61,8 +61,17 @@ db-ssh: ## SSH into the MariaDB container
 pull: ## Updates Emailqueue to the latest version
 	docker exec -it -u root ${DOCKER_APACHE} git -C /emailqueue pull
 
-delivery: ## Process the queue now instead of waiting for the next 1-minute interval
-	docker exec -it -u root ${DOCKER_APACHE} php -q /emailqueue/scripts/delivery
+delivery: ## Process the queue now instead of waiting for the next 1-minute interval. Emails that should be sent on the next Emailqueue call will be sent now.
+	docker exec -it -u root ${DOCKER_APACHE} /emailqueue/scripts/delivery
 
 purge: ## Purges the queue now instead of waiting for the next programmed purge
-	docker exec -it -u root ${DOCKER_APACHE} php -q /emailqueue/scripts/purge
+	docker exec -it -u root ${DOCKER_APACHE} /emailqueue/scripts/purge
+
+flush: ## Removes all the emails in the queue. Use with care, will result in the loss of unsent enqueued emails.
+	docker exec -it -u root ${DOCKER_APACHE} /emailqueue/scripts/flush
+
+pause: ## Pauses email delivery. No emails will be sent under any circumstances.
+	docker exec -it -u root ${DOCKER_APACHE} /emailqueue/scripts/pause
+
+unpause: ## Unpauses email delivery. Emails will be sent.
+	docker exec -it -u root ${DOCKER_APACHE} /emailqueue/scripts/unpause
