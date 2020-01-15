@@ -32,7 +32,7 @@ RUN printf '[PHP]\ndate.timezone = "UTC"\n' > /usr/local/etc/php/conf.d/tzone.in
 # Create db configuration file
 RUN echo "<?php\n" \   
 	"namespace Emailqueue;\n" \
-	"define(\"EMAILQUEUE_DB_HOST\", \"mariadb\");\n" \
+	"define(\"EMAILQUEUE_DB_HOST\", \"emailqueue-mariadb\");\n" \
 	"define(\"EMAILQUEUE_DB_UID\", \"root\");\n" \
 	"define(\"EMAILQUEUE_DB_PWD\", false);\n" \
 	"define(\"EMAILQUEUE_DB_DATABASE\", \"emailqueue\");\n" \

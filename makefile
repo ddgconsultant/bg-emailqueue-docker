@@ -29,7 +29,7 @@ ps: ## Information about the containers
 	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml ps
 
 apache-build: ## Builds the apache image
-	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml build apache
+	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml build emailqueue-apache
 
 apache-log: ## Tail the PHP error log
 	docker logs -f --details ${DOCKER_APACHE}
@@ -37,20 +37,8 @@ apache-log: ## Tail the PHP error log
 apache-ssh: ## SSH into the apache container
 	docker exec -it -u root ${DOCKER_APACHE} bash
 
-cron-build: ## Builds the cron image
-	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml build cron
-
-cron-ssh: ## SSH into into the cron container
-	docker exec -it -u root ${DOCKER_CRON} bash
-
-cron-log: ## Tail the cron error log
-	docker logs -f --details ${DOCKER_CRON}
-
-cron-restart: ## Restarts the cron container
-	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml restart cron
-
 db-build: ## Builds the mariadb image
-	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml build mariadb
+	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml build emailqueue-mariadb
 
 db-log: ## Tail the PHP error log
 	docker logs -f --details ${DOCKER_DB}
