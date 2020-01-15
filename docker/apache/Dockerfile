@@ -14,6 +14,7 @@ RUN apt-get update &&\
 
 # Install app from official git repository
 RUN git clone https://github.com/tin-cat/emailqueue.git /emailqueue
+
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --install-dir=/usr/local/bin --filename=composer

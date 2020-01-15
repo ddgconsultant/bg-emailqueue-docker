@@ -29,7 +29,7 @@ ps: ## Information about the containers
 	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml ps
 
 apache-build: ## Builds the apache image
-	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml build emailqueue-apache
+	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml build emailqueue
 
 apache-log: ## Tail the PHP error log
 	docker logs -f --details ${DOCKER_APACHE}
