@@ -1,7 +1,7 @@
 version: "3.6"
 
 services:
-    emailqueue-apache:
+    emailqueue:
         image: emailqueue-apache
         container_name: emailqueue-apache
         build:
