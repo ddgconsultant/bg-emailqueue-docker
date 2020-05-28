@@ -45,7 +45,8 @@ CREATE TABLE `blacklist` (
 
 ALTER TABLE `blacklist`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `email` (`email`(5));
 
 ALTER TABLE `emails`
   ADD PRIMARY KEY (`id`),
