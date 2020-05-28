@@ -1,4 +1,5 @@
 application.config.inc.php
+docker/mariadb/data
 
 # Annoying files
 .DS_Store
