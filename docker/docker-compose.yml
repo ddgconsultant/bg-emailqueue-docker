@@ -13,6 +13,7 @@ services:
             - emailqueue
         volumes:
             - ../application.config.inc.php:/emailqueue/config/application.config.inc.php
+        restart: always
 
     emailqueue-mariadb:
         image: mariadb
@@ -28,6 +29,7 @@ services:
             - MYSQL_DATABASE=emailqueue
             - MYSQL_ALLOW_EMPTY_PASSWORD=yes
         command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        restart: always
 
 volumes:
     emailqueue-db-data: {}
