@@ -50,6 +50,17 @@ validate "Updating emailqueue_postmaster@birthday.gold password"
 
 echo "Configuration file updated successfully."
 
+
+###---------------------------------------------------------------------------
+# Define the directory for the certificates
+cert_dir="/var/web_certs/BIRTHDAY_SERVER/birthday.gold"
+
+# Create the directory if it doesn't exist
+mkdir -p "$cert_dir"
+validate "Creating directory $cert_dir"
+
+
+###---------------------------------------------------------------------------
 # Define the array with source and destination paths
 files=(
     "/BIRTHDAY_SERVER/_CERTS_/birthday.gold/xfer/AAACertificateServices.crt:/var/web_certs/BIRTHDAY_SERVER/birthday.gold/AAACertificateServices.crt"
