@@ -30,7 +30,6 @@ services:
         volumes:
             - ./mysql/data:/var/lib/mysql
             - ./mysql/emailqueue_init.sql:/docker-entrypoint-initdb.d/schema.sql:ro
-        command: --server-id=1 --log-bin=mysql-bin --gtid-mode=ON --enforce-gtid-consistency=ON --binlog-format=ROW --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --port=3306 --bind-address=0.0.0.0
         restart: unless-stopped
 
 volumes:
