@@ -9,26 +9,28 @@ services:
             dockerfile: ./apache/Dockerfile
         ports:
             - 8081:80
+            - 443:443
         networks:
             - emailqueue
         volumes:
-            - ../application.config.inc.php:/emailqueue/config/application.config.inc.php
+            - ../application.config.inc.php:/var/www/BIRTHDAY_GOLD/emailqueue/config/application.config.inc.php
+            - /var/web_certs/BIRTHDAY_SERVER/birthday.gold:/etc/ssl/private:ro
         restart: unless-stopped
 
-    emailqueue-mariadb:
-        image: mariadb
-        container_name: emailqueue-mariadb
+    emailqueue-mysql:
+        image: mysql:8.0
+        container_name: emailqueue-mysql
         environment:
-            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+            - MYSQL_ROOT_PASSWORD=change_this_password
+            - MYSQL_DATABASE=emailqueue
+        ports:
+            - 3307:3306
         networks:
             - emailqueue
         volumes:
-            - ./mariadb/data:/var/lib/mysql
-            - ./mariadb/emailqueue_init.sql:/docker-entrypoint-initdb.d/schema.sql:ro
-        environment:
-            - MYSQL_DATABASE=emailqueue
-            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+            - ./mysql/data:/var/lib/mysql
+            - ./mysql/emailqueue_init.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+        command: --server-id=1 --log-bin=mysql-bin --gtid-mode=ON --enforce-gtid-consistency=ON --binlog-format=ROW --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --port=3306 --bind-address=0.0.0.0
         restart: unless-stopped
 
 volumes:
