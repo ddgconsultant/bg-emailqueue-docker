@@ -13,9 +13,9 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 # Additional PHP packages
 RUN docker-php-ext-install mysqli opcache
 
-# Install git, unzip, and SSL module
+# Install necessary tools
 RUN apt-get update && \
-    apt-get install -y git unzip apt-utils socat && \
+    apt-get install -y git unzip apt-utils socat default-mysql-client && \
     a2enmod ssl
 
 # Ensure the directory exists and clone the specified emailqueue repository
