@@ -31,14 +31,19 @@ else
     read -sp "Enter emailqueue_postmaster@birthday.gold password: " postmasterpass
     echo
 
+    # Prompt for postmaster@birthday.gold password
+    read -sp "Enter FTP richard password: " ftppass
+    echo
+
     # Save the variables to the password file
     echo "apikey=$apikey" > "$PASSWORD_FILE"
     echo "adminpass=$adminpass" >> "$PASSWORD_FILE"
     echo "postmasterpass=$postmasterpass" >> "$PASSWORD_FILE"
+    echo "ftppass=$ftppass" >> "$PASSWORD_FILE"
 fi
 
 # Ensure necessary variables are set
-if [ -z "$apikey" ] || [ -z "$adminpass" ] || [ -z "$postmasterpass" ]; then
+if [ -z "$apikey" ] || [ -z "$adminpass" ] || [ -z "$postmasterpass" ] || [ -z "$ftppass" ]; then
     echo "One or more required variables are not set. Exiting."
     exit 1
 fi
