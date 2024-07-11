@@ -3,14 +3,14 @@
 # Function to validate commands
 validate() {
     if [ $? -ne 0 ]; then
-        echo "Error: $1"
+        echo "Error: $1" | tee -a "$LOG_FILE"
         exit 1
     else
-        echo "Success: $1"
+        echo "Success: $1" | tee -a "$LOG_FILE"
     fi
 }
 
-
+LOG_FILE="$HOME/updateconfig.log"
 # Path to the password file
 PASSWORD_FILE="$HOME/.passwordfile"
 
