@@ -70,22 +70,29 @@ RUN sed -i 's|SSLCertificateFile.*|SSLCertificateFile /etc/ssl/private/STAR_birt
 RUN a2ensite default-ssl
 
 # Create a startup script to dynamically set server_id, create users, and configure MySQL for external access
-RUN echo "#!/bin/bash\n" \
-    "numeric_part=\$(hostname | grep -o -E '[0-9]+')\n" \
-    "server_id=3\${numeric_part}\n" \
-    "echo -e \"[mysqld]\\nserver_id=\${server_id}\\nlog_bin=mysql-bin\\ngtid_mode=ON\\nenforce-gtid-consistency=ON\\nbinlog-format=ROW\\nport=3316\\nbind-address=0.0.0.0\" > /etc/mysql/conf.d/replication.cnf\n" \
-    "service mysql start\n" \
-    "until mysqladmin ping -hlocalhost --silent; do\n" \
-    "    sleep 1\n" \
-    "done\n" \
-    "mysql -uroot -e \"CREATE USER 'bgdbreplicator1'@'%' IDENTIFIED BY 'change_this_password'; GRANT REPLICATION SLAVE ON *.* TO 'bgdbreplicator1'@'%';\"\n" \
-    "mysql -uroot -e \"CREATE USER 'birthday_gold_admin'@'%' IDENTIFIED BY 'change_this_password'; GRANT ALL ON *.* TO 'birthday_gold_admin'@'%' WITH GRANT OPTION;\"\n" \
-    "service mysql stop\n" > /usr/local/bin/setup_mysql.sh
+# RUN echo "#!/bin/bash\n" \
+#     "numeric_part=\$(hostname | grep -o -E '[0-9]+')\n" \
+#     "server_id=3\${numeric_part}\n" \
+#     "echo -e \"[mysqld]\\nserver_id=\${server_id}\\nlog_bin=mysql-bin\\ngtid_mode=ON\\nenforce-gtid-consistency=ON\\nbinlog-format=ROW\\nport=3316\\nbind-address=0.0.0.0\" > /etc/mysql/conf.d/replication.cnf\n" \
+#     "service mysql start\n" \
+#     "until mysqladmin ping -hlocalhost --silent; do\n" \
+#     "    sleep 1\n" \
+#     "done\n" \
+#     "mysql -uroot -e \"CREATE USER 'bgdbreplicator1'@'%' IDENTIFIED BY 'change_this_password'; GRANT REPLICATION SLAVE ON *.* TO 'bgdbreplicator1'@'%';\"\n" \
+#     "mysql -uroot -e \"CREATE USER 'birthday_gold_admin'@'%' IDENTIFIED BY 'change_this_password'; GRANT ALL ON *.* TO 'birthday_gold_admin'@'%' WITH GRANT OPTION;\"\n" \
+#     "service mysql stop\n" > ~/setup_mysql.sh
 
+
+# Copy the setup script into the container
+COPY setup_mysql.sh /usr/local/bin/setup_mysql.sh
+
+# Make sure the script is executable
 RUN chmod +x /usr/local/bin/setup_mysql.sh
 
 # Expose port 3316 for external MySQL access
 EXPOSE 3316
 
 # Run the startup script and start Apache
-ENTRYPOINT service mysql start && socat TCP-LISTEN:3316,fork TCP:localhost:3306 & /usr/local/bin/setup_mysql.sh && ( cron -f & ) && apache2-foreground
+#ENTRYPOINT service mysql start && socat TCP-LISTEN:3316,fork TCP:localhost:3306 & /usr/local/bin/setup_mysql.sh && ( cron -f & ) && apache2-foreground
+
+ENTRYPOINT ["/bin/bash", "-c", "/usr/local/bin/setup_mysql.sh && exec docker-entrypoint.sh mysqld"]
