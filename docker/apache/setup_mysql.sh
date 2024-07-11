@@ -20,4 +20,4 @@ mysql -uroot -e "CREATE USER 'bgdbreplicator1'@'%' IDENTIFIED BY 'change_this_pa
 mysql -uroot -e "CREATE USER 'birthday_gold_admin'@'%' IDENTIFIED BY 'change_this_password'; GRANT ALL ON *.* TO 'birthday_gold_admin'@'%' WITH GRANT OPTION;"
 
 # Stop MySQL service
-#service mysql stop
+service mysql stop
