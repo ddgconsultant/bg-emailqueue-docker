@@ -114,9 +114,6 @@ files=(
     "/BIRTHDAY_SERVER/_CERTS_/birthday.gold/xfer/USERTrustRSAAAACA.crt:/var/web_certs/BIRTHDAY_SERVER/birthday.gold/USERTrustRSAAAACA.crt"
 )
 
-# Prompt for FTP password
-read -sp "Enter FTP password: " ftppass
-echo
 
 # Start FTP transfer
 ftp -inv dev4.birthday.gold <<EOF
