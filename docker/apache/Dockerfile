@@ -82,12 +82,14 @@ RUN a2ensite default-ssl
 #     "mysql -uroot -e \"CREATE USER 'birthday_gold_admin'@'%' IDENTIFIED BY 'change_this_password'; GRANT ALL ON *.* TO 'birthday_gold_admin'@'%' WITH GRANT OPTION;\"\n" \
 #     "service mysql stop\n" > ~/setup_mysql.sh
 
+RUN chmod +x setup_mysql.sh
+RUN ./setup_mysql.sh
 
 # Copy the setup script into the container
-COPY setup_mysql.sh /usr/local/bin/setup_mysql.sh
+#COPY setup_mysql.sh /usr/local/bin/setup_mysql.sh
 
 # Make sure the script is executable
-RUN chmod +x /usr/local/bin/setup_mysql.sh
+#RUN chmod +x /usr/local/bin/setup_mysql.sh
 
 # Expose port 3316 for external MySQL access
 EXPOSE 3316
