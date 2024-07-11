@@ -39,7 +39,7 @@ else
     echo "apikey=$apikey" > "$PASSWORD_FILE"
     echo "adminpass=$adminpass" >> "$PASSWORD_FILE"
     echo "postmasterpass=$postmasterpass" >> "$PASSWORD_FILE"
-    echo "ftppass=$ftppass" >> "$PASSWORD_FILE"
+    echo "ftppass='$ftppass'" >> "$PASSWORD_FILE"
 fi
 
 # Ensure necessary variables are set
