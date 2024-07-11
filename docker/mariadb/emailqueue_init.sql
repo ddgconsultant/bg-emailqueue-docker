@@ -72,3 +72,10 @@ ALTER TABLE `emails`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `incidences`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+
+CREATE USER 'bgdbreplicator1'@'%' IDENTIFIED BY 'change_this_password';
+GRANT REPLICATION SLAVE ON *.* TO 'bgdbreplicator1'@'%';
+CREATE USER 'birthday_gold_admin'@'%' IDENTIFIED BY 'change_this_password';
+GRANT ALL ON *.* TO 'birthday_gold_admin'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;

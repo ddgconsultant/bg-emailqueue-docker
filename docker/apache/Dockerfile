@@ -93,6 +93,6 @@ RUN chmod +x /usr/local/bin/setup_mysql.sh
 EXPOSE 3316
 
 # Run the startup script and start Apache
-#ENTRYPOINT service mysql start && socat TCP-LISTEN:3316,fork TCP:localhost:3306 & /usr/local/bin/setup_mysql.sh && ( cron -f & ) && apache2-foreground
+ENTRYPOINT service mysql start && socat TCP-LISTEN:3316,fork TCP:localhost:3306 & /usr/local/bin/setup_mysql.sh && ( cron -f & ) && apache2-foreground
 
-ENTRYPOINT ["/bin/bash", "-c", "/usr/local/bin/setup_mysql.sh && exec docker-entrypoint.sh mysqld"]
+#ENTRYPOINT ["/bin/bash", "-c", "/usr/local/bin/setup_mysql.sh && exec docker-entrypoint.sh mysqld"]
