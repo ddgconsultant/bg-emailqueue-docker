@@ -36,9 +36,9 @@ else
     echo
 
     # Save the variables to the password file
-    echo "apikey=$apikey" > "$PASSWORD_FILE"
-    echo "adminpass=$adminpass" >> "$PASSWORD_FILE"
-    echo "postmasterpass=$postmasterpass" >> "$PASSWORD_FILE"
+    echo "apikey='$apikey'" > "$PASSWORD_FILE"
+    echo "adminpass='$adminpass'" >> "$PASSWORD_FILE"
+    echo "postmasterpass='$postmasterpass'" >> "$PASSWORD_FILE"
     echo "ftppass='$ftppass'" >> "$PASSWORD_FILE"
 fi
 
