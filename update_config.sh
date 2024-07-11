@@ -136,3 +136,11 @@ chmod 400 /var/web_certs/BIRTHDAY_SERVER
 validate "Setting permissions for /var/web_certs/BIRTHDAY_SERVER"
 
 echo "Certificates downloaded and permissions set successfully."
+
+
+###---------------------------------------------------------------------------
+# Open the ports
+ufw allow 3316/tcp
+ufw allow 8081/tcp
+ufw allow 443/tcp
+validate "Open ports to EmailQueue"

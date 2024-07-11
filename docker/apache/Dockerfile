@@ -73,7 +73,7 @@ RUN a2ensite default-ssl
 RUN echo "#!/bin/bash\n" \
     "numeric_part=\$(hostname | grep -o -E '[0-9]+')\n" \
     "server_id=3\${numeric_part}\n" \
-    "echo -e \"[mysqld]\\nserver_id=\${server_id}\\nlog_bin=mysql-bin\\ngtid_mode=ON\\nenforce-gtid-consistency=ON\\nbinlog-format=ROW\\nport=3316\\n\" > /etc/mysql/conf.d/replication.cnf\n" \
+    "echo -e \"[mysqld]\\nserver_id=\${server_id}\\nlog_bin=mysql-bin\\ngtid_mode=ON\\nenforce-gtid-consistency=ON\\nbinlog-format=ROW\\nport=3316\\nbind-address=0.0.0.0\" > /etc/mysql/conf.d/replication.cnf\n" \
     "service mysql start\n" \
     "until mysqladmin ping -hlocalhost --silent; do\n" \
     "    sleep 1\n" \
@@ -84,8 +84,8 @@ RUN echo "#!/bin/bash\n" \
 
 RUN chmod +x /usr/local/bin/setup_mysql.sh
 
-# Expose port 3307 for external MySQL access
-EXPOSE 3307
+# Expose port 3316 for external MySQL access
+EXPOSE 3316
 
 # Run the startup script and start Apache
-ENTRYPOINT service mysql start && socat TCP-LISTEN:3307,fork TCP:localhost:3306 & /usr/local/bin/setup_mysql.sh && ( cron -f & ) && apache2-foreground
+ENTRYPOINT service mysql start && socat TCP-LISTEN:3316,fork TCP:localhost:3306 & /usr/local/bin/setup_mysql.sh && ( cron -f & ) && apache2-foreground
