@@ -25,11 +25,12 @@ services:
             - MYSQL_DATABASE=emailqueue
         ports:
             - 3316:3316
+            - 3316:3306
         networks:
             - emailqueue
         volumes:
             - ./mysql/data:/var/lib/mysql
-            - ./mysql/emailqueue_init.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+            - ./mariadb/emailqueue_init.sql:/docker-entrypoint-initdb.d/schema.sql:ro
         restart: unless-stopped
 
 volumes:
