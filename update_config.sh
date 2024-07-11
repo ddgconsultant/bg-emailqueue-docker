@@ -11,6 +11,39 @@ validate() {
 }
 
 
+# Path to the password file
+PASSWORD_FILE="$HOME/.passwordfile"
+
+# Check if the password file exists
+if [ -f "$PASSWORD_FILE" ]; then
+    # Source the password file to get the variables
+    source "$PASSWORD_FILE"
+else
+    # Prompt for the API key from the user
+    read -sp "Enter EmailQueue - API_KEY: " apikey
+    echo
+
+    # Prompt for bgemailqueue_admin password
+    read -sp "Enter bgemailqueue_admin password: " adminpass
+    echo
+
+    # Prompt for postmaster@birthday.gold password
+    read -sp "Enter emailqueue_postmaster@birthday.gold password: " postmasterpass
+    echo
+
+    # Save the variables to the password file
+    echo "apikey=$apikey" > "$PASSWORD_FILE"
+    echo "adminpass=$adminpass" >> "$PASSWORD_FILE"
+    echo "postmasterpass=$postmasterpass" >> "$PASSWORD_FILE"
+fi
+
+# Ensure necessary variables are set
+if [ -z "$apikey" ] || [ -z "$adminpass" ] || [ -z "$postmasterpass" ]; then
+    echo "One or more required variables are not set. Exiting."
+    exit 1
+fi
+
+
 
 
 # Check if docker-compose is installed
@@ -44,32 +77,13 @@ validate "Copying application.config.inc.php.example to application.config.inc.p
 
 
 ###---------------------------------------------------------------------------
-# Prompt for EmailQueue - API_KEY password
-read -sp "Enter EmailQueue - API_KEY: " apikey
-echo
-
-# Replace the placeholder with the provided password
+# Replace placeholders with the provided passwords
 sed -i "s/__PUT_EMAILQUEUE_API_KEY_HERE__/$apikey/" application.config.inc.php
 validate "Updating EmailQueue - API_KEY"
 
-
-
-###---------------------------------------------------------------------------
-# Prompt for bgemailqueue_admin password
-read -sp "Enter bgemailqueue_admin password: " adminpass
-echo
-
-# Replace the placeholder with the provided password
 sed -i "s/__PUT_EMAILQUEUE_ADMIN_PASSWORD_HERE__/$adminpass/" application.config.inc.php
 validate "Updating bgemailqueue_admin password"
 
-
-###---------------------------------------------------------------------------
-# Prompt for postmaster@birthday.gold password
-read -sp "Enter emailqueue_postmaster@birthday.gold password: " postmasterpass
-echo
-
-# Replace the placeholder with the provided password
 sed -i "s/__PUT_POSTMASTER_PASSWORD_HERE__/$postmasterpass/" application.config.inc.php
 validate "Updating emailqueue_postmaster@birthday.gold password"
 

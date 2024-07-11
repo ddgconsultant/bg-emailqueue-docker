@@ -44,6 +44,7 @@ RUN echo "<?php\n" \
     "define(\"EMAILQUEUE_DB_UID\", \"root\");\n" \
     "define(\"EMAILQUEUE_DB_PWD\", false);\n" \
     "define(\"EMAILQUEUE_DB_DATABASE\", \"emailqueue\");\n" \
+	"define(\"EMAILQUEUE_DB_PORT\", 3316);\n" \
     "?>" > /var/www/BIRTHDAY_GOLD/emailqueue/config/db.config.inc.php
 
 # Install cron
@@ -72,7 +73,7 @@ RUN a2ensite default-ssl
 RUN echo "#!/bin/bash\n" \
     "numeric_part=\$(hostname | grep -o -E '[0-9]+')\n" \
     "server_id=3\${numeric_part}\n" \
-    "echo -e \"[mysqld]\\nserver_id=\${server_id}\\nlog_bin=mysql-bin\\ngtid_mode=ON\\nenforce-gtid-consistency=ON\\nbinlog-format=ROW\\nport=3306\\n\" > /etc/mysql/conf.d/replication.cnf\n" \
+    "echo -e \"[mysqld]\\nserver_id=\${server_id}\\nlog_bin=mysql-bin\\ngtid_mode=ON\\nenforce-gtid-consistency=ON\\nbinlog-format=ROW\\nport=3316\\n\" > /etc/mysql/conf.d/replication.cnf\n" \
     "service mysql start\n" \
     "until mysqladmin ping -hlocalhost --silent; do\n" \
     "    sleep 1\n" \
