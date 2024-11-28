@@ -1,8 +1,8 @@
-version: "3.6"
+#version: "3.6"
 
 services:
     emailqueue:
-        image: emailqueue-apache
+        image: trinv/emailqueue-apache:1.5.4
         container_name: emailqueue-apache
         build:
             context: .
@@ -20,6 +20,7 @@ services:
     emailqueue-mysql:
         image: mysql:8.0
         container_name: emailqueue-mysql
+        command: --skip-grant-tables
         environment:
             - MYSQL_ROOT_PASSWORD=change_this_password
             - MYSQL_DATABASE=emailqueue
@@ -31,6 +32,7 @@ services:
             - ./replication.cnf:/etc/mysql/conf.d/.
             - ./mysql/data:/var/lib/mysql
             - ./mariadb/emailqueue_init.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+            - ./my.cnf:/etc/mysql/my.cnf
         restart: unless-stopped
 
 volumes:
