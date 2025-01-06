@@ -29,10 +29,11 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get install apache2 -y
 
 # Ensure the directory exists and clone the specified emailqueue repository
-RUN rm -rf /var/www/BIRTHDAY_GOLD/emailqueue && \
+RUN if [ -d "/var/www/BIRTHDAY_GOLD/emailqueue" ]; then \
+        rm -rf /var/www/BIRTHDAY_GOLD/emailqueue; \
+    fi && \
     mkdir -p /var/www/BIRTHDAY_GOLD/emailqueue && \
     git clone https://github.com/ddgconsultant/emailqueue.git /var/www/BIRTHDAY_GOLD/emailqueue
-
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
