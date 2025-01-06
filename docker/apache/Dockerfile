@@ -16,7 +16,7 @@ RUN docker-php-ext-install mysqli opcache
 # Install necessary tools and Apache2 with SSL
 RUN apt-get update && apt-get install -y \
     apache2 \
-    libapache2-mod-ssl \
+    openssl \
     git \
     unzip \
     apt-utils \
