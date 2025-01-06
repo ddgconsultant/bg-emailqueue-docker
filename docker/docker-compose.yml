@@ -20,7 +20,6 @@ services:
     emailqueue-mysql:
         image: mysql:8.0
         container_name: emailqueue-mysql
-        command: --skip-grant-tables
         environment:
             - MYSQL_ROOT_PASSWORD=change_this_password
             - MYSQL_DATABASE=emailqueue
