@@ -139,8 +139,21 @@ echo "Certificates downloaded and permissions set successfully."
 
 
 ###---------------------------------------------------------------------------
+# copy cert files
+mkdir -p ~/bg-emailqueue-docker/docker/var/web_certs/BIRTHDAY_SERVER/birthday.gold
+cp /var/web_certs/BIRTHDAY_SERVER/birthday.gold/* ~/bg-emailqueue-docker/docker/var/web_certs/BIRTHDAY_SERVER/birthday.gold/.
+echo "Copied Certificates into docker location."
+
+###---------------------------------------------------------------------------
 # Open the ports
 ufw allow 3316/tcp
 ufw allow 8081/tcp
 ufw allow 443/tcp
 validate "Open ports to EmailQueue"
+
+
+###---------------------------------------------------------------------------
+cd docker/
+figlet "Ready to run"
+figlet ""
+echo "Ready for you to run:  docker-compose up -d"
