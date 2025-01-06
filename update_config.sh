@@ -116,7 +116,7 @@ files=(
 
 
 # Start FTP transfer
-ftp -inv dev4.birthday.gold <<EOF
+ftp -inv dev.birthday.gold <<EOF
 user richard $ftppass
 binary
 $(for file in "${files[@]}"; do
