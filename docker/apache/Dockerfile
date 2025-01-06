@@ -79,8 +79,8 @@ RUN touch /var/log/cron.log
 
 # Copy the SSL cert file into the container
 RUN mkdir -p /etc/ssl/private
-COPY /var/web_certs/BIRTHDAY_SERVER/birthday.gold/STAR_birthday_gold.crt /etc/ssl/private/STAR_birthday_gold.crt
-COPY /var/web_certs/BIRTHDAY_SERVER/birthday.gold/server.key /etc/ssl/private/server.key
+COPY ./var/web_certs/BIRTHDAY_SERVER/birthday.gold/STAR_birthday_gold.crt /etc/ssl/private/STAR_birthday_gold.crt
+COPY ./var/web_certs/BIRTHDAY_SERVER/birthday.gold/server.key /etc/ssl/private/server.key
 
 RUN chmod +x /etc/ssl/private/STAR_birthday_gold.crt
 RUN chmod +x /etc/ssl/private/server.key
