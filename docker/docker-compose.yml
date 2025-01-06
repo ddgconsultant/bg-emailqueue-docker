@@ -24,7 +24,7 @@ services:
             - MYSQL_ROOT_PASSWORD=change_this_password
             - MYSQL_DATABASE=emailqueue
         ports:
-            - 3316:3316
+            - 3316:3306
         networks:
             - emailqueue
         volumes:
