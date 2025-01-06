@@ -13,10 +13,17 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 # Additional PHP packages
 RUN docker-php-ext-install mysqli opcache
 
-# Install necessary tools
-RUN apt-get update && \
-    apt-get install -y git unzip apt-utils socat default-mysql-client nano && \
-    a2enmod SSL
+# Install necessary tools and Apache2 with SSL
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    libapache2-mod-ssl \
+    git \
+    unzip \
+    apt-utils \
+    socat \
+    default-mysql-client \
+    nano && \
+    a2enmod ssl
 
 # Install Apache2
 RUN apt-get install apache2 -y
