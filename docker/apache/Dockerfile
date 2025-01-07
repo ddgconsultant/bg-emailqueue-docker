@@ -13,16 +13,26 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 # Additional PHP packages
 RUN docker-php-ext-install mysqli opcache
 
-# Install necessary tools
-RUN apt-get update && \
-    apt-get install -y git unzip apt-utils socat default-mysql-client nano && \
-    a2enmod SSL
+# Install necessary tools and Apache2 with SSL
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    openssl \
+    git \
+    unzip \
+    apt-utils \
+    socat \
+    default-mysql-client \
+    nano && \
+    a2enmod ssl
 
 # Install Apache2
 RUN apt-get install apache2 -y
 
 # Ensure the directory exists and clone the specified emailqueue repository
-RUN mkdir -p /var/www/BIRTHDAY_GOLD/emailqueue && \
+RUN if [ -d "/var/www/BIRTHDAY_GOLD/emailqueue" ]; then \
+        rm -rf /var/www/BIRTHDAY_GOLD/emailqueue; \
+    fi && \
+    mkdir -p /var/www/BIRTHDAY_GOLD/emailqueue && \
     git clone https://github.com/ddgconsultant/emailqueue.git /var/www/BIRTHDAY_GOLD/emailqueue
 
 # Install composer
@@ -69,8 +79,8 @@ RUN touch /var/log/cron.log
 
 # Copy the SSL cert file into the container
 RUN mkdir -p /etc/ssl/private
-COPY STAR_birthday_gold.crt /etc/ssl/private/STAR_birthday_gold.crt
-COPY server.key /etc/ssl/private/server.key
+COPY ./var/web_certs/BIRTHDAY_SERVER/birthday.gold/STAR_birthday_gold.crt /etc/ssl/private/STAR_birthday_gold.crt
+COPY ./var/web_certs/BIRTHDAY_SERVER/birthday.gold/server.key /etc/ssl/private/server.key
 
 RUN chmod +x /etc/ssl/private/STAR_birthday_gold.crt
 RUN chmod +x /etc/ssl/private/server.key
