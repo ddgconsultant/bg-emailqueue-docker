@@ -273,6 +273,9 @@ validate "Building Docker image with port fix"
 
 
 ###---------------------------------------------------------------------------
+figlet " "
 figlet "Ready to run"
-figlet ""
-echo "Ready for you to run:  docker-compose up -d"
+figlet " "
+echo "Ready for you to run:"
+echo "perform:  cd docker"
+echo "perform:  docker-compose up -d"
