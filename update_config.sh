@@ -80,6 +80,103 @@ cp application.config.inc.php.example application.config.inc.php
 validate "Copying application.config.inc.php.example to application.config.inc.php"
 
 
+###---------------------------------------------------------------------------
+### 2025
+###---------------------------------------------------------------------------
+# Configure MySQL and Docker settings
+# Create db.config.inc.php
+cat > db.config.inc.php << 'EOF'
+<?php
+namespace Emailqueue;
+define("EMAILQUEUE_DB_HOST", "emailqueue-mysql");
+define("EMAILQUEUE_DB_UID", "root");
+define("EMAILQUEUE_DB_PWD", "change_this_password");
+define("EMAILQUEUE_DB_DATABASE", "emailqueue");
+define("EMAILQUEUE_DB_PORT", 3306);
+?>
+EOF
+validate "Creating db.config.inc.php"
+
+
+###---------------------------------------------------------------------------
+### 2025
+###---------------------------------------------------------------------------
+# Setup MySQL directories and config
+mkdir -p docker/mysql/conf.d
+mkdir -p docker/mysql/data
+validate "Creating MySQL directories"
+
+
+###---------------------------------------------------------------------------
+### 2025
+###---------------------------------------------------------------------------
+# Create replication config
+numeric_part=$(hostname | grep -o -E '[0-9]+')
+server_id=3${numeric_part}
+echo -e "[mysqld]\nserver_id=${server_id}\nlog_bin=mysql-bin\ngtid_mode=ON\nenforce-gtid-consistency=ON\nbinlog-format=ROW\nport=3306\nbind-address=0.0.0.0" > docker/mysql/conf.d/replication.cnf
+validate "Creating MySQL replication config"
+
+
+###---------------------------------------------------------------------------
+### 2025
+###---------------------------------------------------------------------------
+# Update emailqueue_init.sql
+sed -i '1iCREATE DATABASE IF NOT EXISTS emailqueue;\nUSE emailqueue;\n\nALTER USER '"'"'root'"'"'@'"'"'%'"'"' IDENTIFIED WITH mysql_native_password BY '"'"'change_this_password'"'"';\nFLUSH PRIVILEGES;\n' docker/mariadb/emailqueue_init.sql
+validate "Updating MySQL initialization script"
+
+
+###---------------------------------------------------------------------------
+### 2025
+###---------------------------------------------------------------------------
+# Fix docker-compose.yml port mapping
+sed -i 's/3316:3316/3316:3306/' docker/docker-compose.yml
+validate "Updating Docker port mapping"
+
+
+###---------------------------------------------------------------------------
+### 2025
+###---------------------------------------------------------------------------
+# Update docker-compose.yml
+cat > docker/docker-compose.yml << 'EOF'
+version: "3.6"
+services:
+    emailqueue:
+        image: trinv/emailqueue-apache:1.5.4
+        container_name: emailqueue-apache
+        build:
+            context: .
+            dockerfile: ./apache/Dockerfile
+        ports:
+            - 8081:443
+            - 443:443
+        networks:
+            - emailqueue
+        volumes:
+            - ../application.config.inc.php:/var/www/BIRTHDAY_GOLD/emailqueue/config/application.config.inc.php
+            - ../db.config.inc.php:/var/www/BIRTHDAY_GOLD/emailqueue/config/db.config.inc.php
+            - /var/web_certs/BIRTHDAY_SERVER/birthday.gold:/etc/ssl/private:ro
+        restart: unless-stopped
+    emailqueue-mysql:
+        image: mysql:8.0
+        container_name: emailqueue-mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=change_this_password
+            - MYSQL_DATABASE=emailqueue
+        ports:
+            - 3316:3306
+        networks:
+            - emailqueue
+        volumes:
+            - ./mysql/conf.d:/etc/mysql/conf.d
+            - ./mysql/data:/var/lib/mysql
+            - ./mariadb/emailqueue_init.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+        restart: unless-stopped
+networks:
+    emailqueue:
+        name: emailqueue
+EOF
+validate "Updating docker-compose.yml"
+
 
 ###---------------------------------------------------------------------------
 # Replace placeholders with the provided passwords
@@ -144,6 +241,9 @@ mkdir -p ~/bg-emailqueue-docker/docker/var/web_certs/BIRTHDAY_SERVER/birthday.go
 cp /var/web_certs/BIRTHDAY_SERVER/birthday.gold/* ~/bg-emailqueue-docker/docker/var/web_certs/BIRTHDAY_SERVER/birthday.gold/.
 echo "Copied Certificates into docker location."
 
+
+###---------------------------------------------------------------------------
+### 2025
 ###---------------------------------------------------------------------------
 # Open the ports
 ufw allow 3316/tcp
