@@ -253,7 +253,26 @@ validate "Open ports to EmailQueue"
 
 
 ###---------------------------------------------------------------------------
-cd docker/
+### 2025
+###---------------------------------------------------------------------------
+# Create Dockerfile fix
+cat > docker/apache/Dockerfile << 'EOF'
+FROM trinv/emailqueue-apache:1.5.4
+RUN sed -i 's/3316/3306/g' /var/www/BIRTHDAY_GOLD/emailqueue/classes/database/dbsource_mysqli.inc.php
+EOF
+validate "Creating Dockerfile with port fix"
+
+
+###---------------------------------------------------------------------------
+### 2025
+###---------------------------------------------------------------------------
+# Build new image
+cd docker
+docker-compose build
+validate "Building Docker image with port fix"
+
+
+###---------------------------------------------------------------------------
 figlet "Ready to run"
 figlet ""
 echo "Ready for you to run:  docker-compose up -d"
